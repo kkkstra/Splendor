@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
+    "dev:local": "bash scripts/dev-local.sh",
     "dev:web": "npm run dev --workspace @splendor/web",
     "dev:server": "npm run dev --workspace @splendor/server",
     "lint": "npm run lint --workspaces --if-present",

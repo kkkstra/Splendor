@@ -37,6 +37,20 @@ npm run dev:web
 
 Server defaults to `http://localhost:3001`, web defaults to `http://localhost:3000`.
 
+## One-Command Local Run
+
+```bash
+npm run dev:local
+```
+
+This script will:
+
+- create `apps/server/.env` from `apps/server/.env.example` if missing
+- create `apps/web/.env.local` from `apps/web/.env.example` if missing
+- start local `postgres` and `redis` via Docker Compose
+- generate Prisma client and push schema
+- start backend (`:3001`) and web (`:3000`)
+
 ## Docker
 
 ```bash
