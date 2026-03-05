@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f8f4ed;
+  --card: #fffaf0;
+  --line: #d6cdbb;
+  --text: #1f2937;
+  --accent: #c2410c;
+}
+
+body {
+  background: radial-gradient(circle at top, #fef9ef 0%, #f3ead7 48%, #eadfca 100%);
+  color: var(--text);
+  min-height: 100vh;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+}
+
+input,
+button,
+select,
+textarea {
+  color: inherit;
+}

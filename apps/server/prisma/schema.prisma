@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String      @id
+  nickname    String
+  createdAt   DateTime    @default(now())
+  roomPlayers RoomPlayer[]
+  playerStats PlayerStat?
+
+  @@map("users")
+}
+
+model Room {
+  code       String       @id
+  hostUserId String
+  status     String
+  createdAt  DateTime     @default(now())
+  expiresAt  DateTime?
+  matchId    String?
+
+  players RoomPlayer[]
+  matches Match[]
+
+  @@index([hostUserId])
+  @@map("rooms")
+}
+
+model RoomPlayer {
+  id        String   @id @default(cuid())
+  roomCode  String
+  userId    String
+  seat      Int
+  isReady   Boolean  @default(false)
+  connected Boolean  @default(true)
+  joinedAt  DateTime @default(now())
+
+  room Room @relation(fields: [roomCode], references: [code], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([roomCode, userId])
+  @@index([roomCode])
+  @@index([userId])
+  @@map("room_players")
+}
+
+model Match {
+  id             String      @id
+  roomCode       String
+  status         String
+  winnerUserId   String?
+  winCondition   String?
+  startedAt      DateTime
+  endedAt        DateTime?
+  currentSnapshot Json
+
+  room   Room         @relation(fields: [roomCode], references: [code], onDelete: Cascade)
+  events MatchEvent[]
+
+  @@index([roomCode])
+  @@map("matches")
+}
+
+model MatchEvent {
+  id          String   @id @default(cuid())
+  matchId     String
+  actionSeq   Int
+  actorUserId String
+  actionType  String
+  payload     Json
+  createdAt   DateTime @default(now())
+
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, actionSeq])
+  @@index([matchId])
+  @@map("match_events")
+}
+
+model PlayerStat {
+  userId             String   @id
+  totalMatches       Int      @default(0)
+  totalWins          Int      @default(0)
+  averageDurationSec Int      @default(0)
+  lastMatchAt        DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("player_stats")
+}
